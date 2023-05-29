@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chats")
@@ -19,8 +20,8 @@ public class Chat {
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "group_id", insertable = false, updatable = false),
-            @JoinColumn(name = "user_id", insertable = false, updatable = false)
+            @JoinColumn(name = "group_id"),
+            @JoinColumn(name = "user_id")
     })
     private GroupUser groupUser;
 
@@ -28,7 +29,7 @@ public class Chat {
     private String message;
 
     @CreationTimestamp
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Builder
     public Chat(GroupUser groupUser, String message) {

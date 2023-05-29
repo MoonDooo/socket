@@ -21,6 +21,7 @@ public class Group {
     @Column(name = "id")
     private int id;
 
+    @Column(nullable = false)
     private String groupName;
 
     private String groupImgUrl;
@@ -28,14 +29,13 @@ public class Group {
     /**
      * 양방향 매핑
      */
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<GroupUser> groupUsers = new ArrayList<>();
 
     @Builder
-    public Group(String groupName, String groupImgUrl, GroupUser groupUser) {
+    public Group(String groupName, String groupImgUrl) {
         this.groupName = groupName;
         this.groupImgUrl = groupImgUrl;
-        this.groupUsers.add(groupUser);
     }
 
     @Builder
@@ -46,5 +46,6 @@ public class Group {
     public Group(String groupName, GroupUser groupUser) {
         this.groupName = groupName;
         this.groupUsers.add(groupUser);
+        groupUser.addGroupMapping(this);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import socketchat.chat.controller.dto.AddrDto;
+import socketchat.chat.controller.dto.Port;
 import socketchat.chat.service.SocketService;
 
 import java.net.Inet4Address;
@@ -21,8 +21,8 @@ public class SocketControllerImpl implements SocketController{
     private final SocketService socketService;
 
     @GetMapping("/port")
-    public AddrDto getPortAndIp(@RequestParam("groupId")int groupId) {
-        return socketService.getSocketPort(groupId);
+    public Port getPortAndIp(@RequestParam("groupId")int groupId) throws UnknownHostException {
+        return socketService.getGroupSocketPort(groupId);
     }
 
 

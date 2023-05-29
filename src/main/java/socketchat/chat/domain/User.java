@@ -18,11 +18,8 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(length = 10, unique = true, nullable = false)
+    @Id
+    @Column(length = 20, unique = true, nullable = false)
     private String userId;
 
     @Column(length = 20, nullable = false)
@@ -39,15 +36,25 @@ public class User {
     /**
      * 양방향 매핑
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<GroupUser> groupUsers = new ArrayList<>();
 
+
+    public void updateProfileImgUrl(String profileImgUrl){
+        this.profileImgUrl = profileImgUrl;
+    }
     @Builder
     public User(String userId, String password, String name, String nickname, String profileImgUrl) {
         this.userId = userId;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    @Builder
+    public User(String userId, String profileImgUrl){
+        this.userId = userId;
         this.profileImgUrl = profileImgUrl;
     }
 }

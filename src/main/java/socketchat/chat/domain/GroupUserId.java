@@ -3,15 +3,21 @@ package socketchat.chat.domain;
 import javax.persistence.*;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 
-@Getter @Setter
 @Embeddable
+@NoArgsConstructor
 public class GroupUserId implements Serializable{
     @Column(name = "group_id")
     int groupId;
     @Column(name = "user_id")
-    Long userId;
+    String userId;
+
+    public GroupUserId(int groupId, String userId) {
+        this.groupId = groupId;
+        this.userId = userId;
+    }
 }

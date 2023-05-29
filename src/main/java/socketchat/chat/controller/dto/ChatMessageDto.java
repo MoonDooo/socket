@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatMessageDto {
     private String userId;
-    private Long groupId;
+    private int groupId;
     private String message;
 }

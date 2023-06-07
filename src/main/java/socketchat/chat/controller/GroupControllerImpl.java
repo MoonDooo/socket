@@ -2,10 +2,14 @@ package socketchat.chat.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import socketchat.chat.controller.dto.*;
 import socketchat.chat.service.GroupService;
-import socketchat.chat.service.dto.UserDto;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -42,10 +46,36 @@ public class GroupControllerImpl implements GroupController{
     public GroupReturnDto quitGroup(@RequestBody GroupJoinDto groupJoinDto){
         return groupService.quitGroup(groupJoinDto);
     }
-    /**
-     * to do list
-     * 그룹 안에 모든 user 정보 가지고 오기 chat controller 만들기
-     * 파일 보내는거 만들기
-     */
+
+    @GetMapping("/users")
+    public Result<List<UserInfoDto>> getUserListByGroupId(@RequestParam int groupId){
+        return new Result<>(groupService.getUserListByGroupId(groupId));
+    }
+
+    @PostMapping("/img")
+    public UrlDto saveGroupImg(@RequestParam int groupId, @RequestParam MultipartFile file) throws IOException {
+        return new UrlDto(groupService.saveGroupImg(groupId, file));
+    }
+
+    @DeleteMapping("/img")
+    public ResponseEntity<Boolean> deleteGroupImg(@RequestParam int groupId){
+        boolean status = groupService.deleteProfileImgUrl(groupId);
+        return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/img")
+    public ResponseEntity<Resource> downloadGroupImg(@RequestParam String url) throws IOException {
+        Resource resource = groupService.downloadGroupImg(url);
+        log.info(resource.getFile().getAbsolutePath());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
+    @GetMapping("/search")
+    public Result<List<GroupDto>> searchGroup(@RequestParam String groupName) {
+        return groupService.searchGroup(groupName);
+    }
 
 }

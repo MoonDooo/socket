@@ -32,8 +32,8 @@ public class GroupUser {
     /**
      * 양방향 매핑
      */
-    @OneToMany(mappedBy = "groupUser", cascade = CascadeType.ALL)
-    private List<Chat> chats = new ArrayList<>();
+    @OneToMany(mappedBy = "groupUser", cascade = CascadeType.MERGE)
+    private final List<Chat> chats = new ArrayList<>();
 
     @Builder
     public GroupUser(GroupUserId groupUserId, User user, Group group) {

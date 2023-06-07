@@ -2,6 +2,7 @@ package socketchat.chat.domain;
 
 import javax.persistence.*;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupUserId implements Serializable{
     @Column(name = "group_id")
     int groupId;

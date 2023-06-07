@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupAddDto {
     private String groupName;
-    private String groupImgUrl;
     private String userId;
 }

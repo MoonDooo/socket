@@ -1,77 +1,32 @@
 package socketchat.chat.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import socketchat.chat.controller.dto.ChatMessageDto;
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
+import socketchat.chat.controller.dto.ChatDto;
+import socketchat.chat.controller.dto.UrlDto;
 import socketchat.chat.domain.Chat;
 import socketchat.chat.domain.GroupUser;
-import socketchat.chat.repository.springdata.ChatRepository;
-import socketchat.chat.repository.springdata.GroupUserRepository;
+import socketchat.chat.domain.GroupUserId;
+import socketchat.chat.domain.Type;
+import socketchat.chat.service.dto.RecvMessageDto;
+import socketchat.chat.service.dto.SendMessageDto;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class ChatService {
-    private final GroupUserRepository groupUserRepository;
-    private final ChatRepository chatRepository;
-    private final SocketSession socketSession;
-
-    public void saveChat(ChatMessageDto chatMessageDto){
-        log.info("saveChat start : groupId = {} , userId = {}", chatMessageDto.getGroupId(), chatMessageDto.getUserId());
-        GroupUser groupUser = groupUserRepository.findAllWithGroupAndUserByGroupIdAndUserId(chatMessageDto.getGroupId(), chatMessageDto.getUserId());
-        log.info("findAllWithGroupAndUserByGroupIdAndUserId complete = {} , {}", groupUser.getUser(), groupUser.getGroup());
-        Chat chat = Chat.builder()
-                .message(chatMessageDto.getMessage())
-                .groupUser(groupUser)
-                .build();
-        log.info("saveChat.class");
-        chatRepository.save(chat);
-        log.info("chat save complete");
-    }
-
-    public void ReadClientMessage(ServerSocket serverSocket, Socket clientSocket) throws IOException {
-        log.info("clientSocket.addr = {}", clientSocket.getInetAddress());
-        BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        String message;
-
-        try{
-            while((message = socketSession.readMessageByClientSocket(clientSocket))!=null){
-                log.info("메세지를 받았습니다.");
-                log.info("message = {}" , message);
-                sendChat(clientSocket, serverSocket, message);
-                ChatMessageDto chatMessageDto = new ObjectMapper().readValue(message, ChatMessageDto.class);
-                log.info("groupId = {}, userId = {}, message = {}", chatMessageDto.getGroupId(), chatMessageDto.getUserId(), chatMessageDto.getMessage());
-                saveChat(chatMessageDto);
-        }}catch (IOException e){
-            String userId = socketSession.getUserIdByClientSocket(serverSocket, clientSocket);
-            socketSession.removeClientSocket(serverSocket, userId);
-        }
-
-    }
-
-    private void sendChat(Socket clientSocket, ServerSocket serverSocket, String message) {
-        log.info("client={}, message={}", clientSocket.getInetAddress().toString(), message);
-        Map<String, Socket> clientSocketMap = socketSession.getClientSocketMap(serverSocket);
-
-        clientSocketMap.entrySet().stream()
-                .filter(entry->
-                        entry.getValue() != clientSocket
-                )
-                .forEach(entry -> {
-                    try {
-                        socketSession.sendMessageToClientSocket(entry.getValue(), message);
-                    } catch (IOException e) {
-                        socketSession.removeClientSocket(serverSocket, entry.getKey());
-                    }
-                });
-    }
-
+public interface ChatService {
+    void saveChat(SendMessageDto chatMessageDto);
+    void ReadClientMessage(ServerSocket serverSocket, Socket clientSocket) throws IOException;
+    List<ChatDto> getChatListByGroupId(int groupId);
+    UrlDto sendFile(int groupId, String userId, MultipartFile file) throws IOException;
+    Resource downloadFile(String url) throws MalformedURLException;
 }

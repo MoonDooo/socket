@@ -12,16 +12,6 @@ public class UserDto {
     private String name;
     private String nickname;
     private String password;
-    private String profileImgUrl;
-
-    @Builder
-    public UserDto(String userId, String name, String nickname, String password, String profileImgUrl) {
-        this.userId = userId;
-        this.name = name;
-        this.nickname = nickname;
-        this.password = password;
-        this.profileImgUrl = profileImgUrl;
-    }
 
     @Builder
     public UserDto(String userId, String name, String nickname, String password) {

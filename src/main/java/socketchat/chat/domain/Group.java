@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,11 +27,14 @@ public class Group {
 
     private String groupImgUrl;
 
+    @Formula("(SELECT COUNT(1) FROM group_users gu WHERE gu.group_id = id)")
+    private int people;
+
     /**
      * 양방향 매핑
      */
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<GroupUser> groupUsers = new ArrayList<>();
+    private final List<GroupUser> groupUsers = new ArrayList<>();
 
     @Builder
     public Group(String groupName, String groupImgUrl) {
@@ -47,5 +51,12 @@ public class Group {
         this.groupName = groupName;
         this.groupUsers.add(groupUser);
         groupUser.addGroupMapping(this);
+    }
+
+    /**
+     * update 함수
+     */
+    public void updateGroupImgUrl(String fileName){
+        this.groupImgUrl = fileName;
     }
 }

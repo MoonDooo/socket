@@ -7,8 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupDto {
-    private int id;
+    private int groupId;
     private String groupName;
     private String groupImgUrl;
+    private int people;
 }
 

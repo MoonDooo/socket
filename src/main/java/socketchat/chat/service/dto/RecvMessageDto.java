@@ -1,4 +1,4 @@
-package socketchat.chat.controller.dto;
+package socketchat.chat.service.dto;
 
 import lombok.*;
 
@@ -6,8 +6,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMessageDto {
-    private String userId;
-    private int groupId;
+public class RecvMessageDto {
     private String message;
 }

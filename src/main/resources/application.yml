@@ -16,6 +16,10 @@ spring:
     #default_batch_fetch_size: 1000
 file:
   user:
-    profileDir: C:\Users\ruddh\Pictures\image\
+    profileDir: C:\Users\ruddh\Pictures\image\user\
+  group:
+    profileDir: C:\Users\ruddh\Pictures\image\group\
+  chat:
+    profileDir: C:\Users\ruddh\Pictures\image\chat\
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa

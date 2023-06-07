@@ -9,7 +9,4 @@ import lombok.Setter;
 public class UserLoginDto {
     private String userId;
     private String password;
-    private String name;
-    private String nickname;
-    private String profileImgUrl;
 }

@@ -33,4 +33,10 @@ public interface GroupUserRepository extends JpaRepository<GroupUser, GroupUserI
 
     @Query("SELECT CASE WHEN COUNT(gu) > 0 THEN true ELSE false END FROM GroupUser gu WHERE gu.groupUserId.groupId = :groupId")
     Boolean existsUserByGroupId(int groupId);
+
+    @Query("SELECT COUNT(gu) FROM GroupUser gu WHERE gu.groupUserId.groupId = :groupId")
+    int countByGroupId(int groupId);
+
+    @Query("SELECT CASE WHEN COUNT(gu) > 0 THEN true ELSE false END FROM GroupUser gu WHERE gu.groupUserId.groupId = :groupId AND gu.groupUserId.userId = :userId")
+    boolean existsUserAndGroup(String userId, int groupId);
 }

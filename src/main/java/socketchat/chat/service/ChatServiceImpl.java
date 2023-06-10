@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import socketchat.chat.controller.dto.ChatDto;
 import socketchat.chat.controller.dto.UrlDto;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ChatServiceImpl implements ChatService{
     @Value("${file.chat.profileDir}")
     private String fileDir;
@@ -39,6 +41,7 @@ public class ChatServiceImpl implements ChatService{
     private final SocketSession socketSession;
     private final FileStore fileStore;
 
+    @Transactional
     public void saveChat(SendMessageDto chatMessageDto){
         log.info("saveChat start : groupId = {} , userId = {}", chatMessageDto.getGroupId(), chatMessageDto.getUserId());
         GroupUser groupUser = getGroupUser(chatMessageDto.getGroupId(), chatMessageDto.getUserId());
@@ -90,6 +93,8 @@ public class ChatServiceImpl implements ChatService{
         Socket clientSocket = socketSession.getClientSocketByServerSocketAndUserId(serverSocket, sendMessageDto.getUserId());
         sendChat(clientSocket, serverSocket, sendMessageDto);
     }
+
+
     private void sendChat(Socket clientSocket, ServerSocket serverSocket, SendMessageDto sendMessageDto) throws JsonProcessingException {
         log.info("client={}, message={}", clientSocket.getInetAddress().toString(), sendMessageDto.getMessage());
 

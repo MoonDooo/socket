@@ -38,8 +38,6 @@ public class User {
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<GroupUser> groupUsers = new ArrayList<>();
-
-
     public void updateProfileImgUrl(String profileImgUrl){
         this.profileImgUrl = profileImgUrl;
     }

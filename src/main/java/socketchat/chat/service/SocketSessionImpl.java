@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import socketchat.chat.repository.springdata.GroupUserRepository;
 import socketchat.chat.service.dto.UserIdDto;
 
@@ -22,6 +23,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SocketSessionImpl implements SocketSession{
     private final GroupUserRepository groupUserRepository;
 

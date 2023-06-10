@@ -12,11 +12,8 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query("SELECT COUNT(g) FROM Group g")
     int countGroup();
-
-
     @Query("SELECT g FROM Group g WHERE g.id = :id")
     Group findById(@Param("id") int id);
-
     @Query("SELECT g FROM Group g WHERE g.groupName LIKE %:groupName%")
     List<Group> findAllLikeGroupName(String groupName);
 }

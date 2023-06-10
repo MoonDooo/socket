@@ -17,9 +17,6 @@ public interface GroupUserRepository extends JpaRepository<GroupUser, GroupUserI
     @Query("SELECT gu FROM GroupUser gu JOIN FETCH gu.user u JOIN FETCH gu.group g WHERE u.userId = :userId")
     List<GroupUser> findAllWithGroupAndUserByUserId(String userId);
 
-    @Query("SELECT gu FROM GroupUser gu JOIN FETCH gu.user u JOIN FETCH gu.group g WHERE u.id = :id")
-    List<GroupUser> findAllWithGroupAndUserByUserId(Long id);
-
     @Query("SELECT gu FROM GroupUser gu JOIN FETCH gu.user u JOIN FETCH gu.group g WHERE g.id = :groupId")
     List<GroupUser> findAllWithGroupAndUserByGroupId(int groupId);
 

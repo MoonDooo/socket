@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import socketchat.chat.controller.dto.UrlDto;
 import socketchat.chat.controller.dto.UserInfoDto;
@@ -23,6 +24,7 @@ import java.net.MalformedURLException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final FileStore fileStore;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService{
     @Value("${file.user.profileDir}")
     private String fileDir;
 
+    @Transactional
     public String signUp(UserDto userDto){
         log.info("userId={}, name={}, nickname={}", userDto.getUserId(), userDto.getName(), userDto.getNickname());
         if (checkDuplication(userDto.getUserId())){
@@ -73,7 +76,7 @@ public class UserServiceImpl implements UserService{
         saveProfileImgByUser(user, fileName);
         return new UrlDto(fileName);
     }
-
+    @Transactional
     private void saveProfileImgByUser(User user, String filePath) {
         user.updateProfileImgUrl(filePath);
         userRepository.save(user);

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import socketchat.chat.controller.dto.*;
 import socketchat.chat.domain.Group;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GroupServiceImpl implements GroupService{
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -49,13 +51,14 @@ public class GroupServiceImpl implements GroupService{
         int groupId = addServerSocket(group);
         return socketService.getGroupSocketPort(groupId);
     }
-
+    @Transactional
     private Group saveGroup(GroupAddDto groupAddDto) {
         Group group = buildGroupFromDto(groupAddDto);
         group = groupRepository.save(group);
         return group;
     }
 
+    @Transactional
     private void saveGroupUser(User user, Group group) {
         GroupUser groupUser = buildGroupUser(user, group);
         groupUserRepository.save(groupUser);
@@ -79,7 +82,7 @@ public class GroupServiceImpl implements GroupService{
                 .groupName(groupAddDto.getGroupName())
                 .build();
     }
-
+    @Transactional
     public Port joinGroup(GroupJoinDto groupJoinDto) throws UnknownHostException {
         User user = userRepository.findByUserId(groupJoinDto.getUserId());
         Group group = groupRepository.findById(groupJoinDto.getGroupId());
@@ -145,11 +148,13 @@ public class GroupServiceImpl implements GroupService{
         return filename;
     }
 
+    @Transactional
     private void saveGroupImgUrlByGroup(Group group, String filename) {
         group.updateGroupImgUrl(filename);
         groupRepository.save(group);
     }
 
+    @Transactional
     public Boolean deleteProfileImgUrl(int groupId) {
         Group group = groupRepository.findById(groupId);
         fileStore.deleteFile(fileDir, group.getGroupImgUrl());

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import socketchat.chat.controller.dto.Port;
 import socketchat.chat.domain.Group;
 import socketchat.chat.repository.springdata.GroupRepository;
@@ -18,6 +19,7 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional(readOnly = true)
 public class SocketServiceImpl extends Thread implements SocketService {
     private final GroupRepository groupRepository;
     private final SocketSession socketSession;

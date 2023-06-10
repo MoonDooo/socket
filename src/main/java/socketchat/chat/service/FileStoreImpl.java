@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FileStoreImpl implements FileStore{
     public void deleteFile(String absolutePath, String fileName) {
         File file = new File(absolutePath + fileName);
@@ -27,6 +29,7 @@ public class FileStoreImpl implements FileStore{
         }
     }
 
+    @Transactional
     public String saveFile(String absolutePath, MultipartFile file) throws IOException {
         String saveFilename = getUUID() + getExtension(requireNonNull(file.getOriginalFilename()));
         file.transferTo(new File(absolutePath + saveFilename));
